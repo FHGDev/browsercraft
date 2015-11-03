@@ -1,0 +1,24 @@
+{
+  "name": "browsercraft",
+  "description": "Browser RTS",
+  "main": "server.js",
+  "authors": [
+    "Alvin Lin",
+    "Kenneth Li"
+  ],
+  "license": "MIT",
+  "moduleType": [],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "closure-compiler": "http://dl.google.com/closure-compiler/compiler-latest.zip"
+  }
+}
