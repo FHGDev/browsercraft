@@ -4,7 +4,7 @@
  * @todo Add unit tests!
  */
 
-var CHAT_TAG = '[Obsidio]';
+var CHAT_TAG = '[Browsercraft]';
 var DEV_MODE = false;
 var FRAME_RATE = 1000.0 / 60.0;
 var IP = process.env.IP || 'localhost';
@@ -67,9 +67,7 @@ io.on('connection', function(socket) {
     });
     socket.emit('chat-server-to-clients', {
       name: CHAT_TAG,
-      message: 'Welcome ' + data.name + '. Use WASD to move and click to ' +
-          'shoot! Move around to acquire praesidia and use it to build ' +
-          'turrets and other fortifications. Good luck!',
+      message: 'Welcome ' + data.name,
       isNotification: true
     });
  });

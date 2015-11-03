@@ -1,10 +1,5 @@
-# Obsidio
-Obsidio is an multiplayer online battle arena game that takes place
-in a single large world. Anyone who logs on can battle anyone else that's
-online at the same time. To play, you move around and shoot other players
-while collecting the in-game resource, Praesidium. Once you have enough
-Praesidium, you can build turrets and other structures to help you control
-the map.
+# Browsercraft
+Browsercraft is a multiplayer RTS in browser.
 
 # Technical:
   - Made with NodeJS and Socket.IO
@@ -33,12 +28,14 @@ the map.
   gulp less       # will compile only the LESS assets
 
   gulp watch      # will watch the JS and LESS assets and compile them when
-                  # they are modified, recommended during development
+                  # they are modified
 
   gulp watch-js   # will only watch the JS assets
 
   gulp watch-less # will only watch the LESS assets
   ```
+  Start the server in dev mode using `node server --dev` to serve uncompiled
+  files during development.
 
 # Contributing:
   - Fork this repository and set it up on your computer.
@@ -54,6 +51,5 @@ the map.
 # Creators:
   - Alvin Lin (omgimanerd)
   - Kenneth Li (noobbyte)
-  - Hao Huang (HowYellow)
 
 &copy; 2015 Penumbra Games
