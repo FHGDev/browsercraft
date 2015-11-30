@@ -24,6 +24,7 @@ var cookieParser = require('cookie-parser');
 var express = require('express');
 var http = require('http');
 var morgan = require('morgan');
+var session = require('express-session');
 var socketIO = require('socket.io');
 var swig = require('swig');
 var mongodb = require('mongodb');
@@ -46,7 +47,12 @@ app.engine('html', swig.renderFile);
 app.set('port', PORT_NUMBER);
 app.set('view engine', 'html');
 
-app.use(morgan(':date[web] :method :url :req[header] :req[body] :remote-addr :status'));
+app.use(session({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(morgan(':date[web] :method :url :req[header] :remote-addr :status'));
 app.use('/bower_components',
         express.static(__dirname + '/bower_components'));
 app.use('/static',
@@ -58,11 +64,11 @@ app.use('/shared',
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-
 // Routing
 app.get('/', function(request, response) {
   response.render('index.html', {
-    dev_mode: DEV_MODE
+    dev_mode: DEV_MODE,
+    username: request.session.username
   });
 });
 
@@ -74,19 +80,51 @@ app.post('/register', function(request, response) {
   var username = request.body.username;
   var password = request.body.password;
   var confirmPassword = request.body.confirmPassword;
-  if (password == confirmPassword) {
-    accountManager.registerUser(username, password, function(result) {
-      if (result) {
 
-      } else {
-      }
+  if (request.session.username) {
+    response.render('index.html', {
+      dev_mode: DEV_MODE,
+      message: 'You must log out in order to register a user.',
+      username: request.session.username
     });
-  } else {
+    return;
+  }
+  if (!AccountManager.isValidUsername(username)) {
+    response.render('index.html', {
+      dev_mode: DEV_MODE,
+      message: 'Invalid username.',
+    });
+    return;
+  }
+  if (!AccountManager.isValidPassword(password)) {
+    response.render('index.html', {
+      dev_mode: DEV_MODE,
+      message: 'Your password is too short.',
+    });
+    return;
+  }
+  if (password != confirmPassword) {
     response.render('index.html', {
       dev_mode: DEV_MODE,
       message: 'Your passwords do not match!'
     });
+    return;
   }
+  accountManager.registerUser(username, password, function(result) {
+    if (result) {
+      request.session.username = username;
+      response.render('index.html', {
+        dev_mode: DEV_MODE,
+        message: 'Successfully registered.',
+        username: request.session.username
+      });
+    } else {
+      response.render('index.html', {
+        dev_mode: DEV_MODE,
+        message: 'Your username is taken.'
+      });
+    }
+  });
 });
 
 app.get('/login', function(request, response) {
@@ -94,7 +132,40 @@ app.get('/login', function(request, response) {
 });
 
 app.post('/login', function(request, response) {
+  var username = request.body.username;
+  var password = request.body.password;
 
+  if (request.session.username) {
+    response.render('index.html', {
+      dev_mode: DEV_MODE,
+      message: 'You are already logged in.',
+      username: request.session.username
+    });
+  }
+  accountManager.isUserAuthenticated(username, password, function(status) {
+    if (status) {
+      request.session.username = username;
+      response.render('index.html', {
+        dev_mode: DEV_MODE,
+        username: request.session.username
+      });
+    } else {
+      response.render('index.html', {
+        dev_mode: DEV_MODE,
+        message: 'Invalid credentials.'
+      });
+    }
+  });
+});
+
+app.get('/logout', function(request, response) {
+  request.session.username = null;
+  response.redirect('/');
+});
+
+app.post('/logout', function(request, response) {
+  request.session.username = null;
+  response.redirect('/');
 });
 
 // Server side input handler, modifies the state of the players and the

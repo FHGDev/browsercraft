@@ -29,6 +29,14 @@ AccountManager.hash = function(string) {
   return crypto.createHash('sha256').update(string).digest('base64');
 };
 
+AccountManager.isValidUsername = function(username) {
+  return username.length < 24 && !(/[^a-zA-Z0-9]/).test(username);
+};
+
+AccountManager.isValidPassword = function(password) {
+  return password.length >= 4;
+};
+
 AccountManager.prototype.init = function() {
   this.mongoClient.connect(this.databaseUrl, function(error, database) {
     assert.equal(null, error);
@@ -71,6 +79,22 @@ AccountManager.prototype.isUserAuthenticated = function(username, password,
       // return false.
       callback(!!document &&
                document.password == AccountManager.hash(password));
+    });
+  });
+};
+
+AccountManager.prototype.getUserGameStats = function(username, callback) {
+  this.mongoClient.connect(this.databaseUrl, function(error, database) {
+    assert.equal(null, error);
+    database.collection(AccountManager.USERS).findOne({
+      username: username
+    }, function(error, document) {
+      assert.equal(null, error);
+      if (document) {
+        callback(document.gameStats);
+      } else {
+        callback(null);
+      }
     });
   });
 };
