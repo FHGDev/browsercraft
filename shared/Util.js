@@ -1,7 +1,7 @@
 /**
  * This is a utility class containing utility methods used on the server and
  * client.
- * @author Alvin Lin (alvin.lin.dev@gmail.com)
+ * @author alvin.lin.dev@gmail.com (Alvin Lin)
  */
 
 try {
@@ -10,17 +10,17 @@ try {
 
 /**
  * Empty constructor for the Util class, all functions will be static.
- * @constructor
  */
 function Util() {
   throw new Error('Util should not be instantiated!');
-};
+}
 
 /**
  * Generates and returns a UID.
  * @param {?number=} length An optional length parameter for the UID to
  *   to generate. If the length is not provided, this function will return a
  *   UID of length 32.
+ * @return {string}
  */
 Util.generateUID = function(length) {
   if (!length) {
@@ -150,6 +150,7 @@ Util.getRandomWorldPoint = function(padding) {
  * values, exclusive of the max value.
  * @param {number} min The minimum number to generate.
  * @param {number} max The maximum number to generate.
+ * @return {number}
  */
 Util.randRange = function(min, max) {
   if (min >= max) {
@@ -165,6 +166,7 @@ Util.randRange = function(min, max) {
  * of the max value.
  * @param {number} min The minimum number to generate.
  * @param {number} max The maximum number to generate.
+ * @return {number}
  */
 Util.randRangeInt = function(min, max) {
   if (min >= max) {
@@ -186,5 +188,6 @@ Util.choiceArray = function(array) {
 };
 
 try {
+  /** @nosideeffects */
   module.exports = Util;
 } catch (err) {}

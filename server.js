@@ -32,7 +32,6 @@ var mongodb = require('mongodb');
 var AccountManager = require('./server/AccountManager');
 var GameManager = require('./server/GameManager');
 var LobbyManager = require('./server/LobbyManager');
-var SessionManager = require('./server/SessionManager');
 
 // Initialization.
 var app = express();
@@ -40,7 +39,6 @@ var server = http.Server(app);
 var io = socketIO(server);
 var accountManager = AccountManager.create();
 var lobbyManager = LobbyManager.create();
-var sessionManager = SessionManager.create();
 
 app.engine('html', swig.renderFile);
 
@@ -82,35 +80,35 @@ app.post('/register', function(request, response) {
   var confirmPassword = request.body.confirmPassword;
 
   if (request.session.username) {
-    response.render('index.html', {
-      dev_mode: DEV_MODE,
-      message: 'You must log out in order to register a user.',
-      username: request.session.username
-    });
-    return;
+    return {
+      success: false,
+      message: "You must log out in order to register a user!"
+    };
   }
   if (!AccountManager.isValidUsername(username)) {
-    response.render('index.html', {
-      dev_mode: DEV_MODE,
-      message: 'Invalid username.',
-    });
-    return;
+    return {
+      success: false,
+      message: "Invalid username!"
+    };
   }
   if (!AccountManager.isValidPassword(password)) {
-    response.render('index.html', {
-      dev_mode: DEV_MODE,
-      message: 'Your password is too short.',
-    });
-    return;
+    return {
+      success: false,
+      message: "Your password is too short."
+    };
   }
   if (password != confirmPassword) {
     response.render('index.html', {
       dev_mode: DEV_MODE,
       message: 'Your passwords do not match!'
     });
-    return;
+    return {
+      success: false,
+      message: "Your passwords do not match!"
+    };
   }
-  accountManager.registerUser(username, password, function(result) {
+
+  accountManager.registerUser(username, password, email, function(result) {
     if (result) {
       request.session.username = username;
       response.render('index.html', {
@@ -172,6 +170,8 @@ app.post('/logout', function(request, response) {
 // game based on the input it receives. Everything runs asynchronously with
 // the game loop.
 io.on('connection', function(socket) {
+  console.log(socket.request);
+
   // When a new player joins, the server adds a new player to the game.
   socket.on('new-player', function(data) {
     game.addNewPlayer(data.name, socket);

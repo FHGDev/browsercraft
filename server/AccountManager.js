@@ -4,6 +4,7 @@
  * @author Alvin Lin (alvin.lin.dev@gmail.com)
  */
 
+// Dependencies
 var assert = require('assert');
 var crypto = require('crypto');
 var mongodb = require('mongodb');

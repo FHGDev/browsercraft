@@ -1,17 +1,15 @@
 /**
- * Client side script that initializes the game. This should be the only script
- * that depends on JQuery.
+ * Client side script that initializes and sets up game.html.
  * @author Alvin Lin (alvin.lin.dev@gmail.com)
  */
 
 var socket = io();
 var game = Game.create(socket,
                        document.getElementById('game-container'),
-                       document.getElementById('canvas'),
+                       document.getElementById('game-canvas'),
                        document.getElementById('leaderboard'));
-var chat = Chat.create(socket,
-                       document.getElementById('chat-display'),
-                       document.getElementById('chat-input'));
+var lobby = Lobby.create(socket,
+                         document.getElementById('game-container'));
 
 $(document).ready(function() {
   $('#name-input').focus();
@@ -53,9 +51,9 @@ function init() {
   chat.init();
 };
 
-function animate() {
+function run() {
   AFK_Kicker.check();
   game.update();
   game.draw();
-  window.requestAnimFrame(animate);
+  window.requestAnimFrame(run);
 };
