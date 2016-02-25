@@ -3,9 +3,11 @@
  * @author Alvin Lin (alvin.lin.dev@gmail.com)
  */
 
+// Dependencies
 var gulp = require('gulp');
 
-var closureCompiler = require('google-closure-compiler').gulp();
+var compilerPackage = require('google-closure-compiler');
+var closureCompiler = compilerPackage.gulp();
 var cssnano = require('gulp-cssnano');
 var gjslint = require('gulp-gjslint');
 var less = require('gulp-less');
@@ -41,7 +43,9 @@ gulp.task('js-compile', function() {
                    './static/js/*.js'])
     .pipe(plumber())
     .pipe(closureCompiler({
+      externs: compilerPackage.compiler.CONTRIB_PATH + '/externs/jquery-1.9.js',
       warning_level: 'VERBOSE',
+      jscomp_off: 'checkVars',
       compilation_level: 'ADVANCED_OPTIMIZATIONS',
       js_output_file: 'minified.js'
     }))
