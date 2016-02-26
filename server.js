@@ -29,9 +29,9 @@ var socketIO = require('socket.io');
 var swig = require('swig');
 var mongodb = require('mongodb');
 
-var AccountManager = require('./server/AccountManager');
-var GameManager = require('./server/GameManager');
-var LobbyManager = require('./server/LobbyManager');
+var AccountManager = require('./lib/AccountManager');
+var GameManager = require('./lib/GameManager');
+var LobbyManager = require('./lib/LobbyManager');
 
 // Initialization.
 var app = express();

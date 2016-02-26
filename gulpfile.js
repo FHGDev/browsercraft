@@ -24,7 +24,7 @@ gulp.task('lint', ['js-lint']);
 gulp.task('js-lint', function() {
   return gulp.src(['./extern/*.js',
                    './shared/*.js',
-                   './static/js/**/*.js' ])
+                   './public/js/**/*.js' ])
     .pipe(gjslint({
       flags: ['--jslint_error indentation',
               '--jslint_error well_formed_author',
@@ -42,7 +42,7 @@ gulp.task('js-compile', function() {
   var basePath = path.dirname(__filename);
 
   return gulp.src(['./shared/*.js',
-                   './static/js/**/*.js' ])
+                   './public/js/**/*.js' ])
     .pipe(plumber())
     .pipe(closureCompiler({
       externs: [
@@ -53,11 +53,11 @@ gulp.task('js-compile', function() {
       compilation_level: 'ADVANCED_OPTIMIZATIONS',
       js_output_file: 'minified.js'
     }))
-    .pipe(gulp.dest('./static/dist'));
+    .pipe(gulp.dest('./public/dist'));
 });
 
 gulp.task('less', function() {
-  return gulp.src('./static/less/styles.less')
+  return gulp.src('./public/less/styles.less')
     .pipe(plumber())
     .pipe(less({ compress: true}))
     .pipe(autoprefixer())
@@ -66,22 +66,20 @@ gulp.task('less', function() {
       path.basename = 'minified';
       path.extname = '.css';
     }))
-    .pipe(gulp.dest('./static/dist'));
+    .pipe(gulp.dest('./public/dist'));
 });
 
 gulp.task('watch-js', function() {
   gulp.watch(['./shared/*.js',
-              './static/js/*.js',
-              './static/js/game/*.js'], ['js-compile']);
+              './public/js/**/*.js'], ['js-compile']);
 });
 
 gulp.task('watch-less', function() {
-  gulp.watch('./static/less/*.less', ['less']);
+  gulp.watch('./public/less/*.less', ['less']);
 });
 
 gulp.task('watch', function() {
   gulp.watch(['./shared/*.js',
-              './static/js/*.js',
-              './static/js/game/*.js'], ['js-compile']);
-  gulp.watch('./static/less/*.less', ['less']);
+              './public/js/**/*.js'], ['js-compile']);
+  gulp.watch('./public/less/*.less', ['less']);
 });

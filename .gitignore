@@ -1,3 +1,3 @@
 /node_modules
-/static/bower_components
-/static/dist
+/public/bower_components
+/public/dist
