@@ -5,9 +5,10 @@
 
 /**
  * Empty constructor for the Input object.
- * @constructor
  */
-function Input() {}
+function Input() {
+  throw new Error('Input should not be instantiated!');
+}
 
 /** @type {boolean} */
 Input.LEFT_CLICK = false;
@@ -132,7 +133,7 @@ Input.applyEventHandlers = function() {
  */
 Input.addMouseTracker = function(element, identifier) {
   if (Input.MOUSE[identifier]) {
-    throw new Exception('Non-unique identifier used!');
+    throw new Error('Non-unique identifier used!');
   }
   element.addEventListener('mousemove', function(event) {
     var boundingRect = element.getBoundingClientRect();

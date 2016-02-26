@@ -1,6 +1,6 @@
 /**
- * This is a utility class containing utility methods used on the server and
- * client.
+ * @fileoverview This is a utility class containing utility methods used on the
+ * server and client.
  * @author alvin.lin.dev@gmail.com (Alvin Lin)
  */
 
@@ -136,15 +136,20 @@ Util.randRangeInt = function(min, max) {
 
 /**
  * Returns a random element in a given array.
- * @param {Array.<Object>} array The array from which to select a random
+ * @param {Array.<*>} array The array from which to select a random
  *   element from.
- * @return {Object}
+ * @return {*}
  */
 Util.choiceArray = function(array) {
   return array[Util.randRangeInt(0, array.length)];
 };
 
-try {
-  /** @nosideeffects */
-  module.exports = Util;
-} catch (err) {}
+/**
+ * @suppress {checkVars}
+ */
+(function() {
+  try {
+    /** @nosideeffects */
+    module.exports = Util;
+  } catch (err) {}
+})();

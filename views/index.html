@@ -45,7 +45,9 @@
 {% block scripts %}
   <script src="/static/dist/minified.js"></script>
   <script src="/static/js/game/Input.js"></script>
+  <script src="/static/js/game/Constants.js"></script>
   <script>
+    console.log(Constants.CANVAS_WIDTH);
     Input.applyEventHandlers();
   </script>
 {% endblock %}

@@ -21,9 +21,9 @@ gulp.task('js', ['js-lint', 'js-compile']);
 gulp.task('lint', ['js-lint']);
 
 gulp.task('js-lint', function() {
-  return gulp.src(['./shared/*.js',
-                   './static/js/game/*.js',
-                   './static/js/*.js'])
+  return gulp.src(['./shared/**.js',
+                   './static/js/game/**.js',
+                   './static/js/**.js'])
     .pipe(gjslint({
       flags: ['--jslint_error indentation',
               '--jslint_error well_formed_author',
@@ -45,7 +45,6 @@ gulp.task('js-compile', function() {
     .pipe(closureCompiler({
       externs: compilerPackage.compiler.CONTRIB_PATH + '/externs/jquery-1.9.js',
       warning_level: 'VERBOSE',
-      jscomp_off: 'checkVars',
       compilation_level: 'ADVANCED_OPTIMIZATIONS',
       js_output_file: 'minified.js'
     }))
