@@ -5,8 +5,6 @@
 
 $(document).ready(function() {
 
-  console.log(Constants.CANVAS_WIDTH);
-  console.log(Util.getEuclideanDistance(0, 0, 4, 5));
   Input.applyEventHandlers();
 
   // When the login form is submitted, send an AJAX request to log the user.
@@ -16,6 +14,7 @@ $(document).ready(function() {
       password: $('login-password').val()
     }, function(data) {
     });
+    event.preventDefault();
   });
 
   $('#register').submit(function(event) {

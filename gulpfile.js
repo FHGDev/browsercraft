@@ -11,6 +11,7 @@ var closureCompiler = compilerPackage.gulp();
 var cssnano = require('gulp-cssnano');
 var gjslint = require('gulp-gjslint');
 var less = require('gulp-less');
+var path = require('path');
 var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
 
@@ -21,9 +22,9 @@ gulp.task('js', ['js-lint', 'js-compile']);
 gulp.task('lint', ['js-lint']);
 
 gulp.task('js-lint', function() {
-  return gulp.src(['./shared/**.js',
-                   './static/js/game/**.js',
-                   './static/js/**.js'])
+  return gulp.src(['./extern/*.js',
+                   './shared/*.js',
+                   './static/js/**/*.js' ])
     .pipe(gjslint({
       flags: ['--jslint_error indentation',
               '--jslint_error well_formed_author',
@@ -38,12 +39,16 @@ gulp.task('js-lint', function() {
 });
 
 gulp.task('js-compile', function() {
+  var basePath = path.dirname(__filename);
+
   return gulp.src(['./shared/*.js',
-                   './static/js/game/*.js',
-                   './static/js/*.js'])
+                   './static/js/**/*.js' ])
     .pipe(plumber())
     .pipe(closureCompiler({
-      externs: compilerPackage.compiler.CONTRIB_PATH + '/externs/jquery-1.9.js',
+      externs: [
+        compilerPackage.compiler.CONTRIB_PATH + '/externs/jquery-1.9.js',
+        basePath + '/extern/extern.js'
+      ],
       warning_level: 'VERBOSE',
       compilation_level: 'ADVANCED_OPTIMIZATIONS',
       js_output_file: 'minified.js'

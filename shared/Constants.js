@@ -28,12 +28,11 @@ Constants.CANVAS_WIDTH = 800;
 /** @type {number} */
 Constants.CANVAS_HEIGHT = 600;
 
-/**
- * @suppress {checkVars}
- */
-(function() {
-  try {
-    /** @nosideeffects */
-    module.exports = Constants;
-  } catch (err) {}
-})();
+try {
+  /**
+   * This line is needed on the server side so that other modules can use the
+   * Util class, but since module does not exist in the client side, we enclose
+   * this in a try catch block to catch and suppress that error.
+   */
+  module.exports = Constants;
+} catch (err) {}
