@@ -12,6 +12,20 @@ function Util() {
 }
 
 /**
+ * This method returns the sign of a number.
+ * @param {number} x The number to check.
+ * @return {number}
+ */
+Util.getSign = function(x) {
+  if (x > 0) {
+    return 1;
+  } else if (x < 0) {
+    return -1;
+  }
+  return 0;
+};
+
+/**
  * Generates and returns a UID.
  * @param {?number=} length An optional length parameter for the UID to
  *   to generate. If the length is not provided, this function will return a

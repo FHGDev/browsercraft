@@ -21,9 +21,11 @@ Browsercraft is a multiplayer RTS in browser.
   ```
   The project Gulpfile already has a few custom processes to run.
   ```bash
-  gulp            # will compile the JS and LESS assets
+  gulp            # will compile the JS and LESS assets and lint the JS files
 
-  gulp js         # will compile only the JS assets
+  gulp lint       # Will lint the JS assets for errors
+
+  gulp js         # will compile and lint the JS assets
 
   gulp less       # will compile only the LESS assets
 
@@ -35,7 +37,7 @@ Browsercraft is a multiplayer RTS in browser.
   gulp watch-less # will only watch the LESS assets
   ```
   Start the server in dev mode using `node server --dev` to serve uncompiled
-  files during development.
+  JS files during development.
 
 # Contributing:
   - Fork this repository and set it up on your computer.

@@ -6,14 +6,16 @@
 // Dependencies
 var gulp = require('gulp');
 
+var lessAutoprefix = require('less-plugin-autoprefix');
 var compilerPackage = require('google-closure-compiler');
-var closureCompiler = compilerPackage.gulp();
-var cssnano = require('gulp-cssnano');
+var lessCleancss = require('less-plugin-clean-css');
 var gjslint = require('gulp-gjslint');
 var less = require('gulp-less');
 var path = require('path');
 var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
+
+var closureCompiler = compilerPackage.gulp();
 
 gulp.task('default', ['js-lint', 'js-compile', 'less']);
 
@@ -57,11 +59,18 @@ gulp.task('js-compile', function() {
 });
 
 gulp.task('less', function() {
+  var autoprefix = new lessAutoprefix({
+    browsers: ["last 2 versions"]
+  });
+  var cleancss = new lessCleancss({
+    advanced: true
+  });
+
   return gulp.src('./public/less/styles.less')
     .pipe(plumber())
-    .pipe(less({ compress: true}))
-    .pipe(autoprefixer())
-    .pipe(cssnano())
+    .pipe(less({
+      plugins: [autoprefix, cleancss]
+    }))
     .pipe(rename(function(path) {
       path.basename = 'minified';
       path.extname = '.css';
