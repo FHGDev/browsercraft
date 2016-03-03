@@ -25,8 +25,9 @@ gulp.task('lint', ['js-lint']);
 
 gulp.task('js-lint', function() {
   return gulp.src(['./extern/*.js',
-                   './shared/*.js',
-                   './public/js/**/*.js' ])
+                   './lib/**/*.js',
+                   './public/js/**/*.js',
+                   './shared/*.js' ])
     .pipe(gjslint({
       flags: ['--jslint_error indentation',
               '--jslint_error well_formed_author',
@@ -71,10 +72,7 @@ gulp.task('less', function() {
     .pipe(less({
       plugins: [autoprefix, cleancss]
     }))
-    .pipe(rename(function(path) {
-      path.basename = 'minified';
-      path.extname = '.css';
-    }))
+    .pipe(rename("minified.css"))
     .pipe(gulp.dest('./public/dist'));
 });
 
