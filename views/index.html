@@ -1,12 +1,5 @@
 {% extends 'layout.html' %}
 
-{% block head %}
-
-<script src="/socket.io/socket.io.js">
-</script>
-
-{% endblock %}
-
 {% block body %}
 
   <br />
@@ -43,9 +36,15 @@
 {% endblock %}
 
 {% block scripts %}
-  {% if debug %}
+  <script src="/socket.io/socket.io.js">
+  </script>
+  {% if dev_mode %}
+    <script src="/shared/based.js"></script>
     <script src="/shared/Constants.js"></script>
+    <script src="/shared/Util.js"></script>
+
     <script src="/public/js/game/Input.js"></script>
+    <script src="/public/js/index.js"></script>
 
   {% else %}
     <script src="/public/dist/minified.js"></script>

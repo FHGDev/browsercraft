@@ -51,10 +51,8 @@ app.use(session({
   saveUninitialized: false
 }));
 app.use(morgan(':date[web] :method :url :req[header] :remote-addr :status'));
-app.use('/bower_components',
-        express.static(__dirname + '/bower_components'));
-app.use('/static',
-        express.static(__dirname + '/static'));
+app.use('/public',
+        express.static(__dirname + '/public'));
 app.use('/shared',
         express.static(__dirname + '/shared'));
 // Use request.query for GET request params.
