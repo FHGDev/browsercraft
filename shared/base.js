@@ -1,7 +1,6 @@
 /**
- * This file is needed as a dependency for any class that extends another class.
- * Since we are extending the Function wrapper class, we do not need a module
- * export.
+ * This file contains some base functions useful to both the server and the
+ * client.
  * @author alvin.lin.dev@gmail.com (Alvin Lin)
  */
 
@@ -20,3 +19,16 @@ Function.prototype.inheritsFrom = function(parent) {
   this.prototype.parent = parent.prototype;
   return this;
 };
+
+/**
+ * Binds a function to a context, useful for assigning event handlers and
+ * function callbacks.
+ * @param {Object} context The context to assign the method to.
+ * @param {function()} method The method to bind the context to.
+ * @return {function()}
+ */
+function bind(context, method) {
+  return function() {
+    return method.apply(context, arguments);
+  };
+}

@@ -47,6 +47,19 @@ Util.generateUID = function(length) {
 };
 
 /**
+ * This method linearly scales a number from one range to another.
+ * @param {number} x The number to scale.
+ * @param {number} a1 The lower bound of the range to scale from.
+ * @param {number} a2 The upper bound of the range to scale from.
+ * @param {number} b1 The lower bound of the range to scale to.
+ * @param {number} b2 The upper bound of the range to scale to.
+ * @return {number}
+ */
+Util.linearScale = function(x, a1, a2, b1, b2) {
+  return ((x - a1) * (b2 - b1) / (a2 - a1)) + b1;
+};
+
+/**
  * Returns the Manhattan Distance between two points given their x and y
  * coordinates.
  * @param {number} x1 The x-coordinate of the first point.

@@ -4,19 +4,6 @@
  */
 
 /**
- * Binds a function to a context, useful for assigning event handlers and
- * function callbacks.
- * @param {Object} context The context to assign the method to.
- * @param {function()} method The method to bind the context to.
- * @return {function()}
- */
-function bind(context, method) {
-  return function() {
-    return method.apply(context, arguments);
-  };
-}
-
-/**
  * Creates and returns a div element.
  * @param {?Element=} parent The element to append the newly created div to.
  * @param {?string=} id The id to apply to the newly created div.
