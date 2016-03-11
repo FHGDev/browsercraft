@@ -9,9 +9,9 @@
  * Example usage:
  * require('./inheritable');
  * Player.inheritsFrom(Entity);
- * @param {Object} parent The child object which should inherit from this
+ * @param {Function} parent The child object which should inherit from this
  *   object.
- * @return {Object}
+ * @return {Function}
  */
 Function.prototype.inheritsFrom = function(parent) {
   this.prototype = new parent();
