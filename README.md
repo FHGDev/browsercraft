@@ -1,7 +1,7 @@
 # Browsercraft
 Browsercraft is a multiplayer RTS in browser.
 
-# Technical:
+## Technical:
   - Made with NodeJS and Socket.IO
   - The states of all the objects are all instantiated, updated, and managed
   server side. All calculations are done server side.
@@ -11,7 +11,7 @@ Browsercraft is a multiplayer RTS in browser.
   - The server holds authoritative determination over the positions and states
   of all the objects.
 
-# Setting Up:
+## Setting Up:
   This project requires node version 0.12 or greater.
   npm, bower and gulp should be installed globally on your system.
   ```
@@ -19,6 +19,8 @@ Browsercraft is a multiplayer RTS in browser.
   bower install
   gulp
   ```
+
+## Gulpfile
   The project Gulpfile already has a few custom processes to run.
   ```bash
   gulp            # will compile the JS and LESS assets and lint the JS files
@@ -39,18 +41,34 @@ Browsercraft is a multiplayer RTS in browser.
   Start the server in dev mode using `node server --dev` to serve uncompiled
   JS files during development.
 
-# Contributing:
+## File Organization:
+  `/extern` contains external variable declarations that are needed by they
+  Google Closure Compiler.
+
+  `/lib` contains the server side classes that manage the states of the games
+  and lobbies.
+
+  `/public` contains all static assets, including LESS stylesheets, scripts,
+  images, compiled assets, and external dependencies installed through bower.
+
+  `/shared` contains JavaScript modules with utilities that are needed on
+  both the server and client side. (Util.js)
+
+  `/views` contains the HTML templates that are rendered to the client.
+
+## Contributing:
   - Fork this repository and set it up on your computer.
   - Commit to your own fork and send a pull request to the master repository.
   - The `search-src` script will help you search for TODOs in the source code.
   Run `search-src todo` to find things that need to be fixed or modified.
   - Note that only compiled sources are exposed on the server but are not
-  committed to this repository. Do not commit compiled sources (/static/dist).
+  committed to this repository. Do not commit compiled sources (/public/dist).
   - Your code will be reviewed and must be approved before it is merged.
   - Please use our convention of **2 space tabs that are space characters and
   not tab characters**. Document any code that you write.
+  - Please only commit working builds that do not compile with any errors.
 
-# Creators:
+## Creators:
   - Alvin Lin (omgimanerd)
   - Kenneth Li (noobbyte)
 
