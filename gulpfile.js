@@ -1,9 +1,9 @@
 /**
- * Javascript Task Runner
- * @author Alvin Lin (alvin.lin.dev@gmail.com)
+ * @fileoverview This is the file that determines the behavior of the Gulp task
+ *   runner.
+ * @author alvin.lin.dev@gmail.com (Alvin Lin)
  */
 
-// Dependencies
 var gulp = require('gulp');
 
 var compilerPackage = require('google-closure-compiler');
@@ -16,7 +16,7 @@ var lessCleancss = require('less-plugin-clean-css');
 var merge = require('merge-stream');
 var path = require('path');
 
-function getClosureCompilerConfiguration(outputFile) {
+var getClosureCompilerConfiguration = function(outputFile) {
   var basePath = path.dirname(__filename);
   var closureCompiler = compilerPackage.gulp();
 
@@ -29,7 +29,19 @@ function getClosureCompilerConfiguration(outputFile) {
     compilation_level: 'ADVANCED_OPTIMIZATIONS',
     js_output_file: outputFile
   });
-}
+};
+
+var getLessConfiguration = function() {
+  var autoprefix = new lessAutoprefix({
+    browsers: ["last 2 versions"]
+  });
+  var cleancss = new lessCleancss({
+    advanced: true
+  });
+  return less({
+    plugins: [autoprefix, cleancss]
+  });
+};
 
 gulp.task('default', ['js-lint', 'js-compile', 'less']);
 
@@ -59,34 +71,33 @@ gulp.task('js-compile', function() {
 
   var indexJs = gulp.src(['./public/js/index.js'])
     .pipe(plumber())
-    .pipe(getClosureCompilerConfiguration('minified-index.js'))
+    .pipe(getClosureCompilerConfiguration('index.min.js'))
     .pipe(gulp.dest('./public/dist'));
 
   var gameJs = gulp.src(['./shared/*.js',
                          './public/js/game/game.js',
                          './public/js/game/*.js' ])
     .pipe(plumber())
-    .pipe(getClosureCompilerConfiguration('minified-game.js'))
+    .pipe(getClosureCompilerConfiguration('game.min.js'))
     .pipe(gulp.dest('./public/dist'));
 
   return merge(indexJs, gameJs);
 });
 
 gulp.task('less', function() {
-  var autoprefix = new lessAutoprefix({
-    browsers: ["last 2 versions"]
-  });
-  var cleancss = new lessCleancss({
-    advanced: true
-  });
-
-  return gulp.src('./public/less/styles.less')
+  var indexCss = gulp.src('./public/less/index.less')
     .pipe(plumber())
-    .pipe(less({
-      plugins: [autoprefix, cleancss]
-    }))
-    .pipe(rename("minified.css"))
+    .pipe(getLessConfiguration())
+    .pipe(rename('index.min.css'))
     .pipe(gulp.dest('./public/dist'));
+
+  var gameCss = gulp.src('./public/less/game.less')
+    .pipe(plumber())
+    .pipe(getLessConfiguration())
+    .pipe(rename('game.min.css'))
+    .pipe(gulp.dest('./public/dist'));
+
+  return merge(indexCss, gameCss);
 });
 
 gulp.task('watch-js', function() {

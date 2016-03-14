@@ -1,5 +1,11 @@
 {% extends 'layout.html' %}
 
+{% block head %}
+  <link rel="stylesheet"
+        href="/public/dist/index.min.css" />
+
+{% endblock %}
+
 {% block body %}
 
   <br />
@@ -44,6 +50,6 @@
   {% if dev_mode %}
     <script src="/public/js/index.js"></script>
   {% else %}
-    <script src="/public/dist/minified-index.js"></script>
+    <script src="/public/dist/index.min.js"></script>
   {% endif %}
 {% endblock %}

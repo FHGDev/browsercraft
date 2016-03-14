@@ -1,5 +1,10 @@
 {% extends 'layout.html' %}
 
+{% block head %}
+  <link rel="stylesheet"
+        href="/public/dist/game.min.css" />
+{% endblock %}
+
 {% block body %}
 
   <br />
@@ -23,6 +28,6 @@
     <script src="/public/js/game.js"></script>
 
   {% else %}
-    <script src="/public/dist/minified-index.js"></script>
+    <script src="/public/dist/game.min.js"></script>
   {% endif %}
 {% endblock %}
