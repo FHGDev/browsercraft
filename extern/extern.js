@@ -4,4 +4,15 @@
  * @author alvin.lin.dev@gmail.com (Alvin Lin)
  */
 
+/**
+ * @type {Object}
+ */
 var module = {};
+
+/**
+ * @type {Object}
+ */
+var socket = {
+  emit: null,
+  on: null,
+};

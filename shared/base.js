@@ -1,6 +1,6 @@
 /**
- * This file contains some base functions useful to both the server and the
- * client.
+ * @fileoverview This file contains some base functions useful to both the
+ *  server and the client.
  * @author alvin.lin.dev@gmail.com (Alvin Lin)
  */
 
@@ -24,7 +24,7 @@ Function.prototype.inheritsFrom = function(parent) {
  * Binds a function to a context, useful for assigning event handlers and
  * function callbacks.
  * @param {Object} context The context to assign the method to.
- * @param {function()} method The method to bind the context to.
+ * @param {function(*)} method The method to bind the context to.
  * @return {function()}
  */
 function bind(context, method) {
