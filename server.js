@@ -1,6 +1,6 @@
 /**
- * This is the server app script that is run on the server.
- * @author Alvin Lin (alvin.lin.dev@gmail.com)
+ * @fileoverview This is the server app script.
+ * @author alvin.lin.dev@gmail.com (Alvin Lin)
  */
 
 // Constants
@@ -40,7 +40,7 @@ var sessionConfig = session({
   secret: 'secret',
   resave: true,
   saveUninitialized: true
-})
+});
 var io = socketIO(server);
 var accountManager = AccountManager.create();
 var lobbyManager = LobbyManager.create();
@@ -73,6 +73,13 @@ app.get('/', function(request, response) {
     username: request.session.username
   });
 });
+
+app.get('/game', function(request, response) {
+  response.render('game.html', {
+    dev_mode: DEV_MODE,
+    username: request.session.username
+  })
+})
 
 app.get('/register', function(request, response) {
   response.redirect('/');

@@ -4,8 +4,6 @@
 
   <br />
 
-  {{ message || "" }}
-
   <div id="container">
     <div id="topbar">
 
@@ -41,19 +39,11 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="/socket.io/socket.io.js">
-  </script>
   <script src='/public/bower/jquery/dist/jquery.min.js'>
   </script>
   {% if dev_mode %}
-    <script src="/shared/base.js"></script>
-    <script src="/shared/Constants.js"></script>
-    <script src="/shared/Util.js"></script>
-
-    <script src="/public/js/game/Input.js"></script>
     <script src="/public/js/index.js"></script>
-
   {% else %}
-    <script src="/public/dist/minified.js"></script>
+    <script src="/public/dist/minified-index.js"></script>
   {% endif %}
 {% endblock %}

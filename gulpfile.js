@@ -6,16 +6,30 @@
 // Dependencies
 var gulp = require('gulp');
 
-var lessAutoprefix = require('less-plugin-autoprefix');
 var compilerPackage = require('google-closure-compiler');
-var lessCleancss = require('less-plugin-clean-css');
 var gjslint = require('gulp-gjslint');
 var less = require('gulp-less');
-var path = require('path');
 var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
+var lessAutoprefix = require('less-plugin-autoprefix');
+var lessCleancss = require('less-plugin-clean-css');
+var merge = require('merge-stream');
+var path = require('path');
 
-var closureCompiler = compilerPackage.gulp();
+function getClosureCompilerConfiguration(outputFile) {
+  var basePath = path.dirname(__filename);
+  var closureCompiler = compilerPackage.gulp();
+
+  return closureCompiler({
+    externs: [
+      compilerPackage.compiler.CONTRIB_PATH + '/externs/jquery-1.9.js',
+      basePath + '/extern/extern.js'
+    ],
+    warning_level: 'VERBOSE',
+    compilation_level: 'ADVANCED_OPTIMIZATIONS',
+    js_output_file: outputFile
+  });
+}
 
 gulp.task('default', ['js-lint', 'js-compile', 'less']);
 
@@ -42,21 +56,20 @@ gulp.task('js-lint', function() {
 });
 
 gulp.task('js-compile', function() {
-  var basePath = path.dirname(__filename);
 
-  return gulp.src(['./shared/*.js',
-                   './public/js/**/*.js' ])
+  var indexJs = gulp.src(['./public/js/index.js'])
     .pipe(plumber())
-    .pipe(closureCompiler({
-      externs: [
-        compilerPackage.compiler.CONTRIB_PATH + '/externs/jquery-1.9.js',
-        basePath + '/extern/extern.js'
-      ],
-      warning_level: 'VERBOSE',
-      compilation_level: 'ADVANCED_OPTIMIZATIONS',
-      js_output_file: 'minified.js'
-    }))
+    .pipe(getClosureCompilerConfiguration('minified-index.js'))
     .pipe(gulp.dest('./public/dist'));
+
+  var gameJs = gulp.src(['./shared/*.js',
+                         './public/js/game/game.js',
+                         './public/js/game/*.js' ])
+    .pipe(plumber())
+    .pipe(getClosureCompilerConfiguration('minified-game.js'))
+    .pipe(gulp.dest('./public/dist'));
+
+  return merge(indexJs, gameJs);
 });
 
 gulp.task('less', function() {

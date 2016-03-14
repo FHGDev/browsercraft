@@ -10,8 +10,11 @@ $(document).ready(function() {
       username: $('#login-username').val(),
       password: $('#login-password').val()
     }, function(data) {
-      console.log(data);
-      location.reload();
+      if (data['success']) {
+        location.reload();
+      } else {
+        window.alert(data['message']);
+      }
     });
     event.preventDefault();
   });
@@ -23,8 +26,11 @@ $(document).ready(function() {
       confirmPassword: $('#register-confirm-password').val(),
       email: $('#register-email').val()
     }, function(data) {
-      console.log(data);
-      location.reload();
+      if (data['success']) {
+        location.reload();
+      } else {
+        window.alert(data['message']);
+      }
     });
     event.preventDefault();
   });
