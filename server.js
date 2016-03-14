@@ -20,11 +20,11 @@ process.argv.forEach(function(value, index, array) {
 // Dependencies.
 var assert = require('assert');
 var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
 var express = require('express');
 var http = require('http');
 var morgan = require('morgan');
 var session = require('express-session');
+var sharedSession = require('express-socket.io-session');
 var socketIO = require('socket.io');
 var swig = require('swig');
 var mongodb = require('mongodb');
@@ -36,6 +36,11 @@ var LobbyManager = require('./lib/LobbyManager');
 // Initialization.
 var app = express();
 var server = http.Server(app);
+var sessionConfig = session({
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+})
 var io = socketIO(server);
 var accountManager = AccountManager.create();
 var lobbyManager = LobbyManager.create();
@@ -45,11 +50,7 @@ app.engine('html', swig.renderFile);
 app.set('port', PORT_NUMBER);
 app.set('view engine', 'html');
 
-app.use(session({
-  secret: 'secret',
-  resave: false,
-  saveUninitialized: false
-}));
+app.use(sessionConfig);
 
 app.use(morgan(':date[web] :method :url :req[header] :remote-addr :status'));
 app.use('/public',
@@ -59,11 +60,14 @@ app.use('/shared',
 // Use request.query for GET request params.
 // Use request.body for POST request params.
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
+
+// Allows the sockets to access the session data.
+io.use(sharedSession(sessionConfig, {
+  autoSave: true
+}));
 
 // Routing
 app.get('/', function(request, response) {
-  console.log(request.session);
   response.render('index.html', {
     dev_mode: DEV_MODE,
     username: request.session.username
@@ -108,7 +112,6 @@ app.post('/register', function(request, response) {
   accountManager.registerUser(username, password, email, function(status) {
     if (status) {
       request.session.username = username;
-      console.log(request.session);
       response.json({
         success: true,
         message: 'Successfully registered!'
@@ -166,7 +169,10 @@ app.post('/logout', function(request, response) {
 // game based on the input it receives. Everything runs asynchronously with
 // the game loop.
 io.on('connection', function(socket) {
-  console.log(socket.request);
+
+  socket.on('test', function(data) {
+    console.log(socket.handshake.session);
+  });
 
   // When a new player joins, the server adds a new player to the game.
   socket.on('new-player', function(data) {
@@ -176,10 +182,6 @@ io.on('connection', function(socket) {
 
   // Update the internal object states every time a player sends an intent
   // packet.
-  socket.on('player-action', function(data) {
-    game.updatePlayerOnInput(socket.id, data.keyboardState, data.orientation,
-                             data.shot, data.build, data.timestamp);
-  });
 
   socket.on('chat-client-to-server', function(data) {
     io.sockets.emit('chat-server-to-clients', {
