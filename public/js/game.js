@@ -5,7 +5,5 @@
 
 $(document).ready(function() {
   Input.applyEventHandlers();
-  Input.addMouseTracker(document.getElementById('game-canvas'));
-
-
+  Input.addMouseTracker(document.getElementById('game-canvas'), 'canvas');
 });
