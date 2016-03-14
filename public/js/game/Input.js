@@ -60,7 +60,6 @@ Input.onMouseUp = function(e) {
  * @param {Event} e The event passed to this function.
  */
 Input.onKeyDown = function(e) {
-  console.log(e);
   switch (e.keyCode) {
     case 37:
     case 65:

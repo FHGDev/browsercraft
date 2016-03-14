@@ -8,6 +8,8 @@
 
   <div id="container">
     <div id="topbar">
+
+      {{ username || ""}}
       {% if username %}
 
       {% else %}
@@ -39,7 +41,7 @@
   <script src="/socket.io/socket.io.js">
   </script>
   {% if dev_mode %}
-    <script src="/shared/based.js"></script>
+    <script src="/shared/base.js"></script>
     <script src="/shared/Constants.js"></script>
     <script src="/shared/Util.js"></script>
 

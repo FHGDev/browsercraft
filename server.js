@@ -50,6 +50,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
+
 app.use(morgan(':date[web] :method :url :req[header] :remote-addr :status'));
 app.use('/public',
         express.static(__dirname + '/public'));
@@ -62,6 +63,7 @@ app.use(cookieParser());
 
 // Routing
 app.get('/', function(request, response) {
+  console.log(request.session);
   response.render('index.html', {
     dev_mode: DEV_MODE,
     username: request.session.username
@@ -76,49 +78,46 @@ app.post('/register', function(request, response) {
   var username = request.body.username;
   var password = request.body.password;
   var confirmPassword = request.body.confirmPassword;
+  var email = request.body.email;
 
   if (request.session.username) {
-    return {
+    response.json({
       success: false,
-      message: "You must log out in order to register a user!"
-    };
+      message: 'You must log out in order to register a user!'
+    });
   }
   if (!AccountManager.isValidUsername(username)) {
-    return {
+    response.json({
       success: false,
-      message: "Invalid username!"
-    };
+      message: 'Invalid username!'
+    });
   }
   if (!AccountManager.isValidPassword(password)) {
-    return {
+    response.json({
       success: false,
-      message: "Your password is too short."
-    };
+      message: 'Your password is too short.'
+    });
   }
   if (password != confirmPassword) {
-    response.render('index.html', {
-      dev_mode: DEV_MODE,
+    response.json({
+      success: false,
       message: 'Your passwords do not match!'
     });
-    return {
-      success: false,
-      message: "Your passwords do not match!"
-    };
   }
 
-  accountManager.registerUser(username, password, email, function(result) {
-    if (result) {
+  accountManager.registerUser(username, password, email, function(status) {
+    if (status) {
       request.session.username = username;
-      response.render('index.html', {
-        dev_mode: DEV_MODE,
-        message: 'Successfully registered.',
-        username: request.session.username
-      });
+      console.log(request.session);
+      response.json({
+        success: true,
+        message: 'Successfully registered!'
+      })
     } else {
-      response.render('index.html', {
-        dev_mode: DEV_MODE,
+      response.json({
+        success: false,
         message: 'Your username is taken.'
-      });
+      })
     }
   });
 });
@@ -132,22 +131,21 @@ app.post('/login', function(request, response) {
   var password = request.body.password;
 
   if (request.session.username) {
-    response.render('index.html', {
-      dev_mode: DEV_MODE,
-      message: 'You are already logged in.',
-      username: request.session.username
+    response.json({
+      success: false,
+      message: 'You are already logged in.'
     });
   }
   accountManager.isUserAuthenticated(username, password, function(status) {
     if (status) {
       request.session.username = username;
-      response.render('index.html', {
-        dev_mode: DEV_MODE,
-        username: request.session.username
+      response.json({
+        success: true,
+        message: 'Successfully logged in!'
       });
     } else {
-      response.render('index.html', {
-        dev_mode: DEV_MODE,
+      response.json({
+        success: false,
         message: 'Invalid credentials.'
       });
     }

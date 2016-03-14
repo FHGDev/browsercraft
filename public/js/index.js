@@ -7,12 +7,13 @@ $(document).ready(function() {
 
   Input.applyEventHandlers();
 
-  // When the login form is submitted, send an AJAX request to log the user.
   $('#login').submit(function(event) {
     $.post('/login', {
-      username: $('login-username').val(),
-      password: $('login-password').val()
+      username: $('#login-username').val(),
+      password: $('#login-password').val()
     }, function(data) {
+      console.log(data);
+      location.reload();
     });
     event.preventDefault();
   });
@@ -21,10 +22,11 @@ $(document).ready(function() {
     $.post('/register', {
       username: $('#register-username').val(),
       password: $('#register-password').val(),
-      confirmPassword: $('register-confirm-password').val(),
+      confirmPassword: $('#register-confirm-password').val(),
       email: $('#register-email').val()
     }, function(data) {
-
+      console.log(data);
+      location.reload();
     });
     event.preventDefault();
   });

@@ -1,4 +1,4 @@
-var acm = require('../server/AccountManager');
+var acm = require('../lib/AccountManager');
 var a = acm.create()
 
 a.registerUser('noob', 'password', function(status) {
