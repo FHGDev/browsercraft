@@ -14,6 +14,14 @@ function ViewPort() {
 }
 
 /**
+ * This is the factory method for creating a ViewPort.
+ * @return {ViewPort}
+ */
+ViewPort.create = function() {
+  return new ViewPort();
+};
+
+/**
  * This method updates the ViewPort with the new absolute world coordinates
  * of its center.
  * @param {number} x The new x coordinate of the center of the ViewPort.
