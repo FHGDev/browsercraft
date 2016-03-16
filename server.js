@@ -172,15 +172,12 @@ app.post('/logout', function(request, response) {
   response.redirect('/');
 });
 
-// Server side input handler, modifies the state of the players and the
-// game based on the input it receives. Everything runs asynchronously with
-// the game loop.
+/**
+ * Server side input handler, modifies the state of the players and the
+ * game based on the input it receives. Everything runs asynchronously with
+ * the game loop.
+ */
 io.on('connection', function(socket) {
-
-  socket.on('test', function(data) {
-    console.log(socket.handshake.session);
-  });
-
   // When a new player joins, the server adds a new player to the game.
   socket.on('new-player', function(data) {
     game.addNewPlayer(data.name, socket);

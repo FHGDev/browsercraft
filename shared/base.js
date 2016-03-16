@@ -24,8 +24,8 @@ Function.prototype.inheritsFrom = function(parent) {
  * Binds a function to a context, useful for assigning event handlers and
  * function callbacks.
  * @param {Object} context The context to assign the method to.
- * @param {function(*)} method The method to bind the context to.
- * @return {function()}
+ * @param {function(?)} method The method to bind the context to.
+ * @return {function(?)}
  */
 function bind(context, method) {
   return function() {

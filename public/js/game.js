@@ -4,6 +4,8 @@
  */
 
 $(document).ready(function() {
-  Input.applyEventHandlers();
-  Input.addMouseTracker(document.getElementById('game-canvas'), 'canvas');
+  var inputHandler = Input.create(document.getElementById('game-canvas'));
+  setInterval(function() {
+
+  }, 10);
 });

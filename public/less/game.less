@@ -19,14 +19,20 @@ html, body {
 }
 
 #game-container {
-  width: 100%;
+  position: relative;
+  width: 810px;
+  height: 610px;
   margin: auto;
-  border: 0;
+  border: 5px solid black;
 
-  #game-canvas {
+  * {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     width: 800px;
     height: 600px;
-    border: 1px solid black;
   }
 }
 

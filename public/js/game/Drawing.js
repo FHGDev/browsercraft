@@ -23,13 +23,26 @@ function Drawing(context) {
 Drawing.BASE_IMG_URL = '/public/img/';
 
 /**
- * Factory method for a Drawing object.
+ * This is a factory method for creating a Drawing object.
  * @param {CanvasRenderingContext2D} context The context this object will
  *   draw to.
  * @return {Drawing}
  */
 Drawing.create = function(context) {
   return new Drawing(context);
+};
+
+/**
+ * This method creates and returns an Image object.
+ * @param {string} src The path to the image
+ * @param {number} width The width of the image in pixels
+ * @param {number} height The height of the image in pixels
+ * @return {Image}
+ */
+Drawing.createImage = function(src, width, height) {
+  var image = new Image(width, height);
+  image.src = src;
+  return image;
 };
 
 /**

@@ -1,43 +1,47 @@
 /**
- * Class encapsulating the client side of the game, handles drawing and
- * updates.
+ * @fileoverview This is a class encapsulating the client side of the game,
+ *   which handles the rendering of the lobby and game and the sending of
+ *   user input to the server.
  * @author alvin.lin.dev@gmail.com (Alvin Lin)
  */
-
 /**
  * Creates a Game on the client side to render the players and entities as
  * well as the player UI.
  * @constructor
  * @param {Object} socket The socket connected to the server.
+ * @param {Input} inputHandler The Input object that will track user input.
  * @param {Drawing} drawing The Drawing object that will render the game.
  * @param {ViewPort} viewPort The ViewPort object that will manage the player's
  *   current view.
  */
-function Game(socket, drawing, viewPort) {
+function Game(socket, inputHandler, drawing, viewPort) {
   this.socket = socket;
 
+  this.inputHandler = inputHandler;
   this.drawing = drawing;
   this.viewPort = viewPort;
 
-  this.self = null;
-  this.players = [];
+  this.selfPlayer = null;
+  this.otherPlayers = [];
 }
 
 /**
  * Factory method to create a Game object.
- * @param {Object} socket The socket connected to the server.
+ * @param {Element} lobbyElement The element that the game lobby will be
+ *   rendered in.
  * @param {Element} canvasElement The canvas element that the game will use to
  *   draw to.
  * @return {Game}
  */
-Game.create = function(socket, canvasElement) {
+Game.create = function(lobbyElement, canvasElement) {
   canvasElement.width = Constants.CANVAS_WIDTH;
   canvasElement.height = Constants.CANVAS_HEIGHT;
   var canvasContext = canvasElement.getContext('2d');
 
+  var inputHandler = Input.create(canvasElement);
   var drawing = Drawing.create(canvasContext);
   var viewPort = new ViewPort();
-  return new Game(socket, drawing, viewPort);
+  return new Game(socket, inputHandler, drawing, viewPort);
 };
 
 /**
@@ -72,10 +76,6 @@ Game.prototype.update = function() {
     // or shoot to the server.
     var packet = {
       keyboardState: {
-        up: Input.UP,
-        right: Input.RIGHT,
-        down: Input.DOWN,
-        left: Input.LEFT
       }
     };
     this.socket.emit('player-action', packet);
