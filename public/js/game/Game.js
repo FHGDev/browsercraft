@@ -70,8 +70,6 @@ Game.prototype.receiveGameState = function(state) {
  */
 Game.prototype.update = function() {
   if (this.self) {
-    this.viewPort.update(this.self.x, this.self.y);
-
     // Emits an event for the containing the player's intention to move
     // or shoot to the server.
     var packet = {
@@ -83,7 +81,7 @@ Game.prototype.update = function() {
 };
 
 /**
- * Draws the state of the game onto the HTML5 canvas.
+ * Draws the state of the game using the internal Drawing object.
  */
 Game.prototype.draw = function() {
   // Clear the canvas.

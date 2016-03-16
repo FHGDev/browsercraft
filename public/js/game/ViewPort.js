@@ -1,5 +1,7 @@
 /**
- * Manages the player viewport when they move around.
+ * @fileoverview This class handles the conversion of coordinates from absolute
+ *   world coordinates to canvas coordinates when objects must be rendered on
+ *   the canvas as the player moves around.
  * @author kennethli.3470@gmail.com (Kenneth Li)
  */
 
@@ -8,9 +10,11 @@
  * an abstract class that handles the math of converting absolute
  * coordinates to appropriate canvas coordinates.
  * @constructor
+ * @param {?Array<number>=} center The coordinates of the center of the
+ *   ViewPort.
  */
-function ViewPort() {
-  this.selfCoords = [];
+function ViewPort(center) {
+  this.center = center || [0, 0];
 }
 
 /**
@@ -24,11 +28,10 @@ ViewPort.create = function() {
 /**
  * This method updates the ViewPort with the new absolute world coordinates
  * of its center.
- * @param {number} x The new x coordinate of the center of the ViewPort.
- * @param {number} y The new y coordinate of the center of the ViewPort.
+ * @param {number} center The new coordinates of the center of the ViewPort
  */
-ViewPort.prototype.update = function(x, y) {
-  this.selfCoords = [x, y];
+ViewPort.prototype.setCenter = function(center) {
+  this.center = center;
 };
 
 /**
@@ -40,8 +43,8 @@ ViewPort.prototype.update = function(x, y) {
  * @return {Array<number>}
  */
 ViewPort.prototype.toCanvasCoords = function(coords) {
-  var translateX = this.selfCoords[0] - Constants.CANVAS_WIDTH / 2;
-  var translateY = this.selfCoords[1] - Constants.CANVAS_HEIGHT / 2;
+  var translateX = this.center[0] - Constants.CANVAS_WIDTH / 2;
+  var translateY = this.center[1] - Constants.CANVAS_HEIGHT / 2;
   return [coords[0] - translateX,
           coords[1] - translateY];
 };
@@ -52,8 +55,8 @@ ViewPort.prototype.toCanvasCoords = function(coords) {
  * @return {Array<number>}
  */
 ViewPort.prototype.toAbsoluteCoords = function(coords) {
-  var translateX = this.selfCoords[0] - Constants.CANVAS_WIDTH / 2;
-  var translateY = this.selfCoords[1] - Constants.CANVAS_HEIGHT / 2;
+  var translateX = this.center[0] - Constants.CANVAS_WIDTH / 2;
+  var translateY = this.center[1] - Constants.CANVAS_HEIGHT / 2;
   return [coords[0] + translateX,
           coords[1] + translateY];
 };
