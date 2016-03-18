@@ -4,4 +4,6 @@
  */
 
 $(document).ready(function() {
+
+  var game = Game.create();
 });

@@ -23,6 +23,8 @@ function Game(socket, inputHandler, drawing, viewPort) {
 
   this.selfPlayer = null;
   this.otherPlayers = [];
+
+  this.animationFrameId = 0;
 }
 
 /**
@@ -38,6 +40,7 @@ Game.create = function(lobbyElement, canvasElement) {
   canvasElement.height = Constants.CANVAS_HEIGHT;
   var canvasContext = canvasElement.getContext('2d');
 
+  var socket = io();
   var inputHandler = Input.create(canvasElement);
   var drawing = Drawing.create(canvasContext);
   var viewPort = new ViewPort();
@@ -52,6 +55,21 @@ Game.prototype.init = function() {
   this.socket.on('update', bind(this, function(data) {
     this.receiveGameState(data);
   }));
+};
+
+/**
+ * This method begins the animation loop for the game.
+ */
+Game.prototype.animate = function() {
+  this.animationFrameId = window.requestAnimationFrame(
+      bind(this, this.update));
+};
+
+/**
+ * This method stops the animation loop for the game.
+ */
+Game.prototype.stopAnimation = function() {
+  window.cancelAnimationFrame(this.animationFrameId);
 };
 
 /**
@@ -70,14 +88,17 @@ Game.prototype.receiveGameState = function(state) {
  */
 Game.prototype.update = function() {
   if (this.self) {
-    // Emits an event for the containing the player's intention to move
-    // or shoot to the server.
+    // Emits an event for the containing the player's intention to the server.
     var packet = {
       keyboardState: {
       }
     };
     this.socket.emit('player-action', packet);
   }
+
+  this.draw();
+
+  this.animate();
 };
 
 /**
