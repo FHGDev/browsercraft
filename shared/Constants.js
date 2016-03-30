@@ -16,17 +16,47 @@ function Constants() {
  * All values are in pixels.
  */
 
-/** @type {number} */
+/**
+ * @const
+ * @type {number}
+ */
 Constants.WORLD_MIN = 0;
 
-/** @type {number} */
+/**
+ * @const
+ * @type {number}
+ */
 Constants.WORLD_MAX = 2500;
 
-/** @type {number} */
+/**
+ * @const
+ * @type {number}
+ */
 Constants.CANVAS_WIDTH = 800;
 
-/** @type {number} */
+/**
+ * @const
+ * @type {number}
+ */
 Constants.CANVAS_HEIGHT = 600;
+
+/**
+ * @const
+ * @type {number}
+ */
+Constants.STATUS_IN_LOBBY = 0;
+
+/**
+ * @const
+ * @type {number}
+ */
+Constants.STATUS_IN_ROOM = 1;
+
+/**
+ * @const
+ * @type {number}
+ */
+Constants.STATUS_IN_GAME = 2;
 
 try {
   /**

@@ -10,7 +10,7 @@
   <br />
 
   <div id="game-container">
-    <div id="game-lobby"></div>
+    <div id="game-lobby-container"></div>
     <canvas id="game-canvas" ></canvas>
   </div>
 
@@ -26,9 +26,12 @@
     <script src="/shared/Constants.js"></script>
     <script src="/shared/Util.js"></script>
 
+    <script src="/public/js/game/Drawing.js"></script>
+    <script src="/public/js/game/Game.js"></script>
     <script src="/public/js/game/Input.js"></script>
+    <script src="/public/js/game/Lobby.js"></script>
+    <script src="/public/js/game/ViewPort.js"></script>
     <script src="/public/js/game.js"></script>
-
   {% else %}
     <script src="/public/dist/game.min.js"></script>
   {% endif %}

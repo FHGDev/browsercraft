@@ -1,10 +1,25 @@
-var acm = require('../lib/AccountManager');
-var a = acm.create()
+var am = require('../lib/AccountManager');
+var lm = require('../lib/LobbyManager');
+// var a = am.create();
+var l = lm.create();
 
-a.registerUser('noob', 'password', function(status) {
-  console.log(status);
-});
+// a.registerUser('noob', 'password', function(status) {
+//   console.log(status);
+// });
+//
+// a.isUserAuthenticated('omgimanerd', 'password', function(status) {
+//   console.log(status);
+// });
 
-a.isUserAuthenticated('omgimanerd', 'password', function(status) {
-  console.log(status);
-});
+l.printDebug();
+l.addNewPlayer('id1', 'alvin');
+l.addNewPlayer('id2', 'christine');
+l.printDebug();
+console.log(l.createRoom('summoners rift'));
+console.log(l.createRoom('summoners rift'));
+console.log(l.joinRoom('summoners rift', 'id1', false));
+console.log(l.joinRoom('summoners rift', 'id2', true));
+l.printDebug();
+l.leaveRoom('summoners rift', 'id1');
+l.leaveRoom('summoners rift', 'id2');
+l.printDebug();

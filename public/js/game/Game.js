@@ -8,7 +8,6 @@
  * Creates a Game on the client side to render the players and entities as
  * well as the player UI.
  * @constructor
- * @param {Object} socket The socket connected to the server.
  * @param {Input} inputHandler The Input object that will track user input.
  * @param {Drawing} drawing The Drawing object that will render the game.
  * @param {ViewPort} viewPort The ViewPort object that will manage the player's
@@ -29,21 +28,21 @@ function Game(socket, inputHandler, drawing, viewPort) {
 
 /**
  * Factory method to create a Game object.
+ * @param {Object} socket The Socket connected to the server.
  * @param {Element} lobbyElement The element that the game lobby will be
  *   rendered in.
  * @param {Element} canvasElement The canvas element that the game will use to
  *   draw to.
  * @return {Game}
  */
-Game.create = function(lobbyElement, canvasElement) {
+Game.create = function(socket, canvasElement) {
   canvasElement.width = Constants.CANVAS_WIDTH;
   canvasElement.height = Constants.CANVAS_HEIGHT;
   var canvasContext = canvasElement.getContext('2d');
 
-  var socket = io();
   var inputHandler = Input.create(canvasElement);
   var drawing = Drawing.create(canvasContext);
-  var viewPort = new ViewPort();
+  var viewPort = ViewPort.create();
   return new Game(socket, inputHandler, drawing, viewPort);
 };
 

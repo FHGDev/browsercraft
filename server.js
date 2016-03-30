@@ -29,7 +29,7 @@ var socketIO = require('socket.io');
 var swig = require('swig');
 var mongodb = require('mongodb');
 
-var AccountManager = require('./lib/AccountManager');
+var router = require('./router/router');
 var GameManager = require('./lib/GameManager');
 var LobbyManager = require('./lib/LobbyManager');
 
@@ -42,7 +42,7 @@ var sessionConfig = session({
   saveUninitialized: true
 });
 var io = socketIO(server);
-var accountManager = AccountManager.create();
+var gameManager = GameManager.create();
 var lobbyManager = LobbyManager.create();
 
 app.engine('html', swig.renderFile);
@@ -57,120 +57,18 @@ app.use('/public',
         express.static(__dirname + '/public'));
 app.use('/shared',
         express.static(__dirname + '/shared'));
+
 // Use request.query for GET request params.
 // Use request.body for POST request params.
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.locals.dev_mode = DEV_MODE;
+app.use('/', router);
 
 // Allows the sockets to access the session data.
 io.use(sharedSession(sessionConfig, {
   autoSave: true
 }));
-
-// Routing
-app.get('/', function(request, response) {
-  response.render('index.html', {
-    dev_mode: DEV_MODE,
-    username: request.session.username
-  });
-});
-
-app.get('/game', function(request, response) {
-  response.render('game.html', {
-    dev_mode: DEV_MODE,
-    username: request.session.username
-  })
-})
-
-app.get('/register', function(request, response) {
-  response.redirect('/');
-});
-
-app.post('/register', function(request, response) {
-  var username = request.body.username;
-  var password = request.body.password;
-  var confirmPassword = request.body.confirmPassword;
-  var email = request.body.email;
-
-  if (request.session.username) {
-    response.json({
-      success: false,
-      message: 'You must log out in order to register a user!'
-    });
-  }
-  if (!AccountManager.isValidUsername(username)) {
-    response.json({
-      success: false,
-      message: 'Invalid username!'
-    });
-  }
-  if (!AccountManager.isValidPassword(password)) {
-    response.json({
-      success: false,
-      message: 'Your password is too short.'
-    });
-  }
-  if (password != confirmPassword) {
-    response.json({
-      success: false,
-      message: 'Your passwords do not match!'
-    });
-  }
-
-  accountManager.registerUser(username, password, email, function(status) {
-    if (status) {
-      request.session.username = username;
-      response.json({
-        success: true,
-        message: 'Successfully registered!'
-      })
-    } else {
-      response.json({
-        success: false,
-        message: 'Your username is taken.'
-      })
-    }
-  });
-});
-
-app.get('/login', function(request, response) {
-  response.redirect('/');
-});
-
-app.post('/login', function(request, response) {
-  var username = request.body.username;
-  var password = request.body.password;
-
-  if (request.session.username) {
-    response.json({
-      success: false,
-      message: 'You are already logged in.'
-    });
-  }
-  accountManager.isUserAuthenticated(username, password, function(status) {
-    if (status) {
-      request.session.username = username;
-      response.json({
-        success: true,
-        message: 'Successfully logged in!'
-      });
-    } else {
-      response.json({
-        success: false,
-        message: 'Invalid credentials.'
-      });
-    }
-  });
-});
-
-app.get('/logout', function(request, response) {
-  request.session.username = null;
-  response.redirect('/');
-});
-
-app.post('/logout', function(request, response) {
-  request.session.username = null;
-  response.redirect('/');
-});
 
 /**
  * Server side input handler, modifies the state of the players and the
@@ -178,16 +76,29 @@ app.post('/logout', function(request, response) {
  * the game loop.
  */
 io.on('connection', function(socket) {
-  // When a new player joins, the server adds a new player to the game.
-  socket.on('new-player', function(data) {
-    game.addNewPlayer(data.name, socket);
-    socket.emit('received-new-player');
+
+  /**
+   * When a new player joins, the server adds them to the lobby and sends back
+   * their username through the callback.
+   */
+  socket.on('new-player', function(data, callback) {
+    var username = socket.handshake.session.username;
+    if (!username) {
+      socket.emit('no-username');
+      return;
+    }
+    lobbyManager.addNewPlayer(username, socket.id);
+    callback(username);
   });
 
   // Update the internal object states every time a player sends an intent
   // packet.
 
   socket.on('chat-client-to-server', function(data) {
+    var username = socket.handshake.session.username;
+    if (!username) {
+      socket.emit('no-username');
+    }
     io.sockets.emit('chat-server-to-clients', {
       name: game.getPlayerNameBySocketId(socket.id),
       message: data
@@ -202,16 +113,13 @@ io.on('connection', function(socket) {
 // Server side game loop, runs at 60Hz and sends out update packets to all
 // clients every tick.
 setInterval(function() {
-//  game.update();
-//  game.sendState();
 
 }, FRAME_RATE);
 
 // Starts the server.
 server.listen(PORT_NUMBER, function() {
-  console.log('STARTING SERVER ON PORT ' + PORT_NUMBER);
-  accountManager.init();
   if (DEV_MODE) {
+  console.log('STARTING SERVER ON PORT ' + PORT_NUMBER);
     console.log('DEVELOPMENT MODE ENABLED: SERVING UNCOMPILED JAVASCRIPT!');
   }
 });
