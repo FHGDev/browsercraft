@@ -14,7 +14,7 @@ $(document).ready(function() {
    * server will be unable to identify the user, and will send this packet
    * to redirect the user back to the homepage.
    */
-  socket.on('no-username', function(data) {
+  socket.on('disconnect', function(data) {
     window.alert('An error occurred! Please log in again.');
     window.location = '/logout';
   });

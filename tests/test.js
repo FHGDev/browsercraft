@@ -1,5 +1,5 @@
 var am = require('../lib/AccountManager');
-var lm = require('../lib/LobbyManager');
+var lm = require('../lib/LobbyManager.proto');
 // var a = am.create();
 var l = lm.create();
 
@@ -12,14 +12,11 @@ var l = lm.create();
 // });
 
 l.printDebug();
-l.addNewPlayer('id1', 'alvin');
-l.addNewPlayer('id2', 'christine');
+l.addPlayer('id1', 'alvin');
+l.addPlayer('id2', 'christine');
 l.printDebug();
 console.log(l.createRoom('summoners rift'));
-console.log(l.createRoom('summoners rift'));
-console.log(l.joinRoom('summoners rift', 'id1', false));
-console.log(l.joinRoom('summoners rift', 'id2', true));
+console.log(l.joinRoom('summoners rift', 'id1', true));
 l.printDebug();
-l.leaveRoom('summoners rift', 'id1');
-l.leaveRoom('summoners rift', 'id2');
+console.log(l.setReadyStatus('summoners rift', 'id1', true));
 l.printDebug();
