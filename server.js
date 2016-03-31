@@ -42,7 +42,7 @@ var sessionConfig = session({
   saveUninitialized: true
 });
 var io = socketIO(server);
-var gameManager = GameManager.create();
+// var gameManager = GameManager.create();
 var lobbyManager = LobbyManager.create();
 
 app.engine('html', swig.renderFile);
@@ -84,31 +84,56 @@ io.on('connection', function(socket) {
   socket.on('new-player', function(data, callback) {
     var username = socket.handshake.session.username;
     if (!username) {
-      socket.emit('disconnect');
+      socket.emit('no-username');
       return;
     }
     var status = lobbyManager.addPlayer(username, socket.id);
-    callback({
-      success: status.success,
-      username: username
-    });
+    callback(status);
+  });
+
+  /**
+   * This is the event handler for the packet emitted when a player wants
+   * to create a room in the lobby.
+   */
+  socket.on('create-room', function(data, callback) {
+    var username = socket.handshake.session.username;
+    if (!username) {
+      socket.emit('no-username');
+      return;
+    }
+    var status = lobbyManager.createRoom(data.roomName);
+    if (status.success) {
+      status = lobbyManager.joinRoom(data.roomName, socket.id, true);
+    }
+    callback(status);
   });
 
   /**
    * This is the event handler for the packet emitted when a player wants
    * to join a room in the lobby.
    */
-  socket.on('create-room', function(data, callback) {
-    var username = socket.handshack.session.username;
+  socket.on('join-room', function(data, callback) {
+    var username = socket.handshake.session.username;
     if (!username) {
-      socket.emit('disconnect');
+      socket.emit('no-username');
       return;
     }
-    var status = lobbyManager.createRoom(data.roomName);
-    callback({
-      success: status.success,
-      message: status.message
-    })
+    var status = lobbyManager.joinRoom(data.roomName, socket.id, false);
+    callback(status);
+  });
+
+  /**
+   * This is the event handler for the packet emitted when a player wants
+   * to leave a room that they are in.
+   */
+  socket.on('leave-room', function(data, callback) {
+    var username = socket.handshake.session.username;
+    if (!username) {
+      socket.emit('no-username');
+      return;
+    }
+    var status = lobbyManager.leaveRoom(data.roomName, socket.id);
+    callback(status);
   });
 
   // Update the internal object states every time a player sends an intent
@@ -116,16 +141,16 @@ io.on('connection', function(socket) {
   socket.on('chat-client-to-server', function(data) {
     var username = socket.handshake.session.username;
     if (!username) {
-      socket.emit('disconnect');
+      socket.emit('no-username');
       return;
     }
     io.sockets.emit('chat-server-to-clients', {
-      name: game.getPlayerNameBySocketId(socket.id),
+      username: username,
       message: data
     });
   });
 
-  // When a player disconnects, remove them from the game.
+  // When a player no-usernames, remove them from the game.
   socket.on('disconnect', function() {
     lobbyManager.removePlayer(socket.id);
   });
@@ -134,13 +159,12 @@ io.on('connection', function(socket) {
 // Server side game loop, runs at 60Hz and sends out update packets to all
 // clients every tick.
 setInterval(function() {
-
 }, FRAME_RATE);
 
 // Starts the server.
 server.listen(PORT_NUMBER, function() {
-  if (DEV_MODE) {
   console.log('STARTING SERVER ON PORT ' + PORT_NUMBER);
+  if (DEV_MODE) {
     console.log('DEVELOPMENT MODE ENABLED: SERVING UNCOMPILED JAVASCRIPT!');
   }
 });

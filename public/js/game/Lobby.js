@@ -9,7 +9,7 @@ function Lobby(socket, lobbyElement) {
   this.lobbyElement = lobbyElement;
 }
 
-Lobby.createButton = function(class, onclick) {
+Lobby.createButton = function() {
 
 };
 
