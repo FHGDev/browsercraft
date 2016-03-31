@@ -6,7 +6,8 @@
 // Constants
 var CHAT_TAG = '[Browsercraft]';
 var DEV_MODE = false;
-var FRAME_RATE = 1000.0 / 60.0;
+var FRAME_RATE = 1000 / 60;
+var LOBBY_UPDATE_RATE = 1000;
 var IP = process.env.IP || 'localhost';
 var PORT_NUMBER = process.env.PORT || 5000;
 
@@ -26,7 +27,6 @@ var morgan = require('morgan');
 var session = require('express-session');
 var sharedSession = require('express-socket.io-session');
 var socketIO = require('socket.io');
-var swig = require('swig');
 var mongodb = require('mongodb');
 
 var router = require('./router/router');
@@ -43,12 +43,11 @@ var sessionConfig = session({
 });
 var io = socketIO(server);
 // var gameManager = GameManager.create();
-var lobbyManager = LobbyManager.create();
-
-app.engine('html', swig.renderFile);
+var lobbyManager = LobbyManager.create(io);
 
 app.set('port', PORT_NUMBER);
-app.set('view engine', 'html');
+app.set('view engine', 'jade');
+app.locals.dev_mode = DEV_MODE;
 
 app.use(sessionConfig);
 
@@ -62,7 +61,6 @@ app.use('/shared',
 // Use request.body for POST request params.
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.locals.dev_mode = DEV_MODE;
 app.use('/', router);
 
 // Allows the sockets to access the session data.
@@ -160,6 +158,10 @@ io.on('connection', function(socket) {
 // clients every tick.
 setInterval(function() {
 }, FRAME_RATE);
+
+setInterval(function() {
+  lobbyManager.sendState();
+}, LOBBY_UPDATE_RATE);
 
 // Starts the server.
 server.listen(PORT_NUMBER, function() {
