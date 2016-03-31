@@ -102,8 +102,10 @@ gulp.task('less', function() {
 });
 
 gulp.task('watch-js', function() {
-  gulp.watch(['./shared/*.js',
-              './public/js/**/*.js'], ['js-compile']);
+  gulp.watch(['./extern/*.js',
+              './lib/**/*.js',
+              './public/js/**/*.js',
+              './shared/*.js' ], ['js-compile']);
 });
 
 gulp.task('watch-less', function() {
@@ -111,7 +113,9 @@ gulp.task('watch-less', function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch(['./shared/*.js',
-              './public/js/**/*.js'], ['js-compile']);
+  gulp.watch(['./extern/*.js',
+              './lib/**/*.js',
+              './public/js/**/*.js',
+              './shared/*.js' ], ['js-compile']);
   gulp.watch('./public/less/*.less', ['less']);
 });
