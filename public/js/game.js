@@ -6,8 +6,7 @@
 $(document).ready(function() {
   var socket = io();
 
-  // var lobby = Lobby.create(
-  //     socket, document.getElementById('game-lobby-container'));
+  var lobby = Lobby.create(socket);
 
   /**
    * If at any point the user's session randomly expires or disappears, the

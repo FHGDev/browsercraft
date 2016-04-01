@@ -2,14 +2,15 @@ extends ./layout.jade
 
 block head
   link(rel="stylesheet", href="/public/dist/game.min.css")
-  script(src="/public/bower/angular/angular.min.js")
   
 block body
   br
   
   #game-container
-    #game-lobby-container
     canvas#game-canvas
+    #game-lobby-container
+      #players-container
+      #rooms-container
   
 block scripts
   script(src="/socket.io/socket.io.js")

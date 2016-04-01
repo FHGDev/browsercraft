@@ -7,7 +7,7 @@
 var CHAT_TAG = '[Browsercraft]';
 var DEV_MODE = false;
 var FRAME_RATE = 1000 / 60;
-var LOBBY_UPDATE_RATE = 1000;
+var LOBBY_UPDATE_RATE = 500;
 var IP = process.env.IP || 'localhost';
 var PORT_NUMBER = process.env.PORT || 5000;
 
@@ -85,7 +85,7 @@ io.on('connection', function(socket) {
       socket.emit('no-username');
       return;
     }
-    var status = lobbyManager.addPlayer(username, socket.id);
+    var status = lobbyManager.addPlayer(socket.id, username);
     callback(status);
   });
 
