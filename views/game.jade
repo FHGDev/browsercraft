@@ -11,6 +11,8 @@ block body
     #game-lobby-container
       #players-container
       #rooms-container
+      input#room-name-input
+      button#create-room-button Create Room
   
 block scripts
   script(src="/socket.io/socket.io.js")
@@ -26,6 +28,5 @@ block scripts
     script(src="/public/js/game/Lobby.js")
     script(src="/public/js/game/ViewPort.js")
     script(src="/public/js/game.js")
-  
   else
     script(src="/public/dist/game.min.js")

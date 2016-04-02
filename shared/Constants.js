@@ -18,6 +18,12 @@ function Constants() {
 
 /**
  * @const
+ * @type {string}
+ */
+Constants.BIG_FUCKUP_ERROR = "This should not happen! Tell Alvin immediately!";
+
+/**
+ * @const
  * @type {number}
  */
 Constants.WORLD_MIN = 0;
@@ -58,11 +64,8 @@ Constants.STATUS_IN_ROOM = 1;
  */
 Constants.STATUS_IN_GAME = 2;
 
-try {
-  /**
-   * This line is needed on the server side so that other modules can use the
-   * Util class, but since module does not exist in the client side, we enclose
-   * this in a try catch block to catch and suppress that error.
-   */
+if (typeof module === 'object') {
   module.exports = Constants;
-} catch (err) {}
+} else {
+  window.Constants = Constants;
+}
