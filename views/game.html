@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+  <link rel="stylesheet"
+        href="/public/dist/game.min.css" />
+{% endblock %}
+
+{% block body %}
+
+  <br />
+
+  <div id="game-container">
+    <canvas id="game-canvas"></canvas>
+    <div id="game-lobby-container">
+      <div id="players-container"></div>
+      <div id="rooms-container"></div>
+      <input type="text" id="room-name-input" />
+      <button id="create-room-button">Create Room</button>
+      <button id="leave-room-button">Leave Room</button>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="/socket.io/socket.io.js">
+  </script>
+  <script src='/public/bower/jquery/dist/jquery.min.js'>
+  </script>
+  {% if dev_mode %}
+    <script src="/shared/base.js"></script>
+    <script src="/shared/Constants.js"></script>
+    <script src="/shared/Util.js"></script>
+
+    <script src="/public/js/game/Drawing.js"></script>
+    <script src="/public/js/game/Game.js"></script>
+    <script src="/public/js/game/Input.js"></script>
+    <script src="/public/js/game/Lobby.js"></script>
+    <script src="/public/js/game/ViewPort.js"></script>
+    <script src="/public/js/game.js"></script>
+  {% else %}
+    <script src="/public/dist/game.min.js"></script>
+  {% endif %}
+{% endblock %}

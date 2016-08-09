@@ -27,6 +27,7 @@ var morgan = require('morgan');
 var session = require('express-session');
 var sharedSession = require('express-socket.io-session');
 var socketIO = require('socket.io');
+var swig = require('swig')
 var mongodb = require('mongodb');
 
 var router = require('./router/router');
@@ -45,18 +46,19 @@ var io = socketIO(server);
 // var gameManager = GameManager.create();
 var lobbyManager = LobbyManager.create(io);
 
+app.engine('html', swig.renderFile);
+
 app.set('port', PORT_NUMBER);
-app.set('view engine', 'jade');
+app.set('view engine', 'html');
+
 app.locals.dev_mode = DEV_MODE;
 
 app.use(sessionConfig);
-
 app.use(morgan(':date[web] :method :url :req[header] :remote-addr :status'));
 app.use('/public',
         express.static(__dirname + '/public'));
 app.use('/shared',
         express.static(__dirname + '/shared'));
-
 // Use request.query for GET request params.
 // Use request.body for POST request params.
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -130,7 +132,7 @@ io.on('connection', function(socket) {
       socket.emit('no-username');
       return;
     }
-    var status = lobbyManager.leaveRoom(data.roomName, socket.id);
+    var status = lobbyManager.leaveRoom(socket.id);
     callback(status);
   });
 

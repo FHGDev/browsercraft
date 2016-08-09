@@ -14,7 +14,7 @@ var router = express.Router();
 
 // Routing
 router.get('/', function(request, response) {
-  response.render('index', {
+  response.render('index.html', {
     dev_mode: request.app.locals.dev_mode,
     username: request.session.username
   });
@@ -22,12 +22,12 @@ router.get('/', function(request, response) {
 
 router.get('/game', function(request, response) {
   if (request.session.username) {
-    response.render('game', {
+    response.render('game.html', {
       dev_mode: request.app.locals.dev_mode,
       username: request.session.username
     });
   } else {
-    response.render('index', {
+    response.render('index.html', {
       dev_mode: request.app.locals.dev_mode,
       message: "You must be logged in to play."
     });

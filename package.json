@@ -34,7 +34,8 @@
     "less-plugin-clean-css": "^1.5.1",
     "merge-stream": "^1.0.0",
     "mongodb": "^2.0.49",
-    "morgan": "^1.6.1",
-    "socket.io": "^1.4.5"
+    "morgan": "^1.7.0",
+    "socket.io": "^1.4.5",
+    "swig": "^1.4.2"
   }
 }

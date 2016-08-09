@@ -23,7 +23,6 @@ var getClosureCompilerConfiguration = function(outputFile) {
   return closureCompiler({
     externs: [
       compilerPackage.compiler.CONTRIB_PATH + '/externs/jquery-1.9.js',
-      compilerPackage.compiler.CONTRIB_PATH + '/externs/angular-1.5.js',
       basePath + '/extern/extern.js'
     ],
     warning_level: 'VERBOSE',

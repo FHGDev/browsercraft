@@ -65,7 +65,14 @@ Constants.STATUS_IN_ROOM = 1;
 Constants.STATUS_IN_GAME = 2;
 
 if (typeof module === 'object') {
+  /**
+   * This is used if Constants is being imported as a Node module.
+   */
   module.exports = Constants;
 } else {
+  /**
+   * Otherwise, if this class is used on the client side, then just load
+   * it into the window context.
+   */
   window.Constants = Constants;
 }
